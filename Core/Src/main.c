@@ -20,6 +20,7 @@
 #include "main.h"
 #include "adc.h"
 #include "i2c.h"
+#include "tim.h"
 #include "gpio.h"
 
 /* Private includes ----------------------------------------------------------*/
@@ -34,18 +35,49 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
+#define LEFT_FORWARD_PORT   GPIOA
+#define LEFT_FORWARD_PIN    GPIO_PIN_12
 
+#define LEFT_REVERSE_PORT   GPIOA
+#define LEFT_REVERSE_PIN    GPIO_PIN_11
+
+#define RIGHT_FORWARD_PORT  GPIOB
+#define RIGHT_FORWARD_PIN   GPIO_PIN_4
+
+#define RIGHT_REVERSE_PORT  GPIOB
+#define RIGHT_REVERSE_PIN   GPIO_PIN_5
+
+#define MotorEnable_GPIO_Port GPIOB
+#define MotorEnable_Pin GPIO_PIN_3
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
 /* USER CODE BEGIN PM */
+#define LeftForward()       HAL_GPIO_WritePin(LEFT_FORWARD_PORT, LEFT_FORWARD_PIN, GPIO_PIN_SET); \
+                            HAL_GPIO_WritePin(LEFT_REVERSE_PORT, LEFT_REVERSE_PIN, GPIO_PIN_RESET);
+        
+#define LeftReverse()       HAL_GPIO_WritePin(LEFT_FORWARD_PORT, LEFT_FORWARD_PIN, GPIO_PIN_RESET); \
+                            HAL_GPIO_WritePin(LEFT_REVERSE_PORT, LEFT_REVERSE_PIN, GPIO_PIN_SET);
+        
+#define RightForward()      HAL_GPIO_WritePin(RIGHT_FORWARD_PORT, RIGHT_FORWARD_PIN, GPIO_PIN_SET); \
+                            HAL_GPIO_WritePin(RIGHT_REVERSE_PORT, RIGHT_REVERSE_PIN, GPIO_PIN_RESET);
+        
+#define RightReverse()      HAL_GPIO_WritePin(RIGHT_FORWARD_PORT, RIGHT_FORWARD_PIN, GPIO_PIN_RESET); \
+                            HAL_GPIO_WritePin(RIGHT_REVERSE_PORT, RIGHT_REVERSE_PIN, GPIO_PIN_SET);
+                       
+#define SetPWM1DutyCycle()  __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_3, pwm1_duty_cycle)
+
+#define SetPWM2DutyCycle()  __HAL_TIM_SET_COMPARE(&htim4, TIM_CHANNEL_3, pwm2_duty_cycle)
+
+#define MotorEnable()       HAL_GPIO_WritePin(MotorEnable_GPIO_Port, MotorEnable_Pin, GPIO_PIN_SET);
 
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-
+uint16_t pwm1_duty_cycle = 10;
+uint16_t pwm2_duty_cycle = 35;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -90,23 +122,22 @@ int main(void)
   MX_I2C1_Init();
   MX_ADC1_Init();
   MX_I2C2_Init();
+  MX_TIM1_Init();
+  MX_TIM4_Init();
   /* USER CODE BEGIN 2 */
-
+  HAL_TIM_PWM_Start(&htim1,TIM_CHANNEL_3);
+  HAL_TIM_PWM_Start(&htim4,TIM_CHANNEL_3);
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-      HAL_GPIO_WritePin(GPIOB, GPIO_PIN_4, GPIO_PIN_RESET);
-      HAL_GPIO_WritePin(GPIOB, GPIO_PIN_5, GPIO_PIN_SET);
-      HAL_GPIO_WritePin(GPIOB, GPIO_PIN_8, GPIO_PIN_SET);
-      HAL_GPIO_WritePin(GPIOB, GPIO_PIN_3, GPIO_PIN_SET);
-      
-      HAL_GPIO_WritePin(GPIOA, GPIO_PIN_12, GPIO_PIN_RESET);
-      HAL_GPIO_WritePin(GPIOA, GPIO_PIN_11, GPIO_PIN_SET);
-      HAL_GPIO_WritePin(GPIOA, GPIO_PIN_10, GPIO_PIN_SET);
-      HAL_GPIO_WritePin(GPIOB, GPIO_PIN_3, GPIO_PIN_SET);
+      MotorEnable();
+      LeftForward();
+      SetPWM1DutyCycle();
+      RightReverse();
+      SetPWM2DutyCycle();
       
       HAL_Delay(100);
     /* USER CODE END WHILE */
@@ -168,7 +199,7 @@ void SystemClock_Config(void)
 
 /**
   * @brief  Period elapsed callback in non blocking mode
-  * @note   This function is called  when TIM4 interrupt took place, inside
+  * @note   This function is called  when TIM3 interrupt took place, inside
   * HAL_TIM_IRQHandler(). It makes a direct call to HAL_IncTick() to increment
   * a global variable "uwTick" used as application time base.
   * @param  htim : TIM handle
@@ -179,7 +210,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
   /* USER CODE BEGIN Callback 0 */
 
   /* USER CODE END Callback 0 */
-  if (htim->Instance == TIM4) {
+  if (htim->Instance == TIM3) {
     HAL_IncTick();
   }
   /* USER CODE BEGIN Callback 1 */

@@ -4,6 +4,7 @@
 "balancecar_hal_freertos\gpio.o"
 "balancecar_hal_freertos\adc.o"
 "balancecar_hal_freertos\i2c.o"
+"balancecar_hal_freertos\tim.o"
 "balancecar_hal_freertos\stm32f1xx_it.o"
 "balancecar_hal_freertos\stm32f1xx_hal_msp.o"
 "balancecar_hal_freertos\stm32f1xx_hal_timebase_tim.o"

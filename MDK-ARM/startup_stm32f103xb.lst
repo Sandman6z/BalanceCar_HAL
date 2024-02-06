@@ -473,12 +473,12 @@ ARM Macro Assembler    Page 8
               00000000 
 Command Line: --debug --xref --diag_suppress=9931 --cpu=Cortex-M3 --apcs=interw
 ork --depend=balancecar_hal_freertos\startup_stm32f103xb.d -obalancecar_hal_fre
-ertos\startup_stm32f103xb.o -I.\RTE\_BalanceCar_HAL_FreeRTOS -I"C:\Program File
-s\Keil_v5\ArmPacks\ARM\CMSIS\5.9.0\CMSIS\Core\Include" -I"C:\Program Files\Keil
-_v5\ArmPacks\Keil\STM32F1xx_DFP\2.4.0\Device\Include" --predefine="__EVAL SETA 
-1" --predefine="__UVISION_VERSION SETA 539" --predefine="_RTE_ SETA 1" --predef
-ine="STM32F10X_MD SETA 1" --predefine="_RTE_ SETA 1" --list=startup_stm32f103xb
-.lst startup_stm32f103xb.s
+ertos\startup_stm32f103xb.o -I.\RTE\_BalanceCar_HAL_FreeRTOS -IC:\Users\zbn02\A
+ppData\Local\arm\packs\ARM\CMSIS\6.0.0\CMSIS\Core\Include -IC:\Users\zbn02\AppD
+ata\Local\arm\packs\Keil\STM32F1xx_DFP\2.4.1\Device\Include --predefine="__UVIS
+ION_VERSION SETA 539" --predefine="_RTE_ SETA 1" --predefine="STM32F10X_MD SETA
+ 1" --predefine="_RTE_ SETA 1" --list=startup_stm32f103xb.lst startup_stm32f103
+xb.s
 
 
 
@@ -1204,4 +1204,4 @@ Symbol: __use_two_region_memory
       None
 Comment: __use_two_region_memory unused
 3 symbols
-410 symbols in table
+409 symbols in table
