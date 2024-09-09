@@ -3,6 +3,7 @@
 "balancecar_hal_freertos\main.o"
 "balancecar_hal_freertos\gpio.o"
 "balancecar_hal_freertos\adc.o"
+"balancecar_hal_freertos\dma.o"
 "balancecar_hal_freertos\i2c.o"
 "balancecar_hal_freertos\tim.o"
 "balancecar_hal_freertos\stm32f1xx_it.o"
@@ -27,7 +28,7 @@
 "balancecar_hal_freertos\system_stm32f1xx.o"
 "balancecar_hal_freertos\driver_led.o"
 "balancecar_hal_freertos\driver_timer.o"
---strict --scatter "BalanceCar_HAL_FreeRTOS\BalanceCar_HAL_FreeRTOS.sct"
+--library_type=microlib --strict --scatter "BalanceCar_HAL_FreeRTOS\BalanceCar_HAL_FreeRTOS.sct"
 --summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols
 --info sizes --info totals --info unused --info veneers
 --list "BalanceCar_HAL_FreeRTOS.map" -o BalanceCar_HAL_FreeRTOS\BalanceCar_HAL_FreeRTOS.axf

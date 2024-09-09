@@ -19,13 +19,14 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "adc.h"
+#include "dma.h"
 #include "i2c.h"
 #include "tim.h"
 #include "gpio.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "driver_led.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -97,6 +98,7 @@ void SystemClock_Config(void);
   */
 int main(void)
 {
+
   /* USER CODE BEGIN 1 */
 
   /* USER CODE END 1 */
@@ -119,6 +121,7 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
+  MX_DMA_Init();
   MX_I2C1_Init();
   MX_ADC1_Init();
   MX_I2C2_Init();
@@ -133,13 +136,22 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-      MotorEnable();
-      LeftForward();
-      SetPWM1DutyCycle();
-      RightReverse();
-      SetPWM2DutyCycle();
+//      MotorEnable();
+//      LeftForward();
+//      SetPWM1DutyCycle();
+//      RightReverse();
+//      SetPWM2DutyCycle();
+//      
+//      HAL_Delay(100);
       
-      HAL_Delay(100);
+    WS2812_Number_4(0x180000,0x001800,0x000018,0);
+    HAL_Delay(500);
+    WS2812_Number_4(0,0x180000,0x001800,0x000018);
+    HAL_Delay(500);
+    WS2812_Number_4(0x000018,0,0x180000,0x001800);
+    HAL_Delay(500);
+    WS2812_Number_4(0x001800,0x000018,0,0x180000);
+    HAL_Delay(500);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */

@@ -1,8 +1,5 @@
 balancecar_hal_freertos\driver_led.o: ..\Drivers\BSP\driver_led.c
 balancecar_hal_freertos\driver_led.o: ..\Drivers\BSP\driver_led.h
-balancecar_hal_freertos\driver_led.o: ..\Drivers\BSP\driver_timer.h
-balancecar_hal_freertos\driver_led.o: C:\Program Files\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
-balancecar_hal_freertos\driver_led.o: ../Core/Inc/gpio.h
 balancecar_hal_freertos\driver_led.o: ../Core/Inc/main.h
 balancecar_hal_freertos\driver_led.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h
 balancecar_hal_freertos\driver_led.o: ../Core/Inc/stm32f1xx_hal_conf.h
@@ -11,6 +8,7 @@ balancecar_hal_freertos\driver_led.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f
 balancecar_hal_freertos\driver_led.o: ../Drivers/CMSIS/Device/ST/STM32F1xx/Include/stm32f1xx.h
 balancecar_hal_freertos\driver_led.o: ../Drivers/CMSIS/Device/ST/STM32F1xx/Include/stm32f103xb.h
 balancecar_hal_freertos\driver_led.o: ../Drivers/CMSIS/Include/core_cm3.h
+balancecar_hal_freertos\driver_led.o: C:\Program Files\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
 balancecar_hal_freertos\driver_led.o: ../Drivers/CMSIS/Include/cmsis_version.h
 balancecar_hal_freertos\driver_led.o: ../Drivers/CMSIS/Include/cmsis_compiler.h
 balancecar_hal_freertos\driver_led.o: ../Drivers/CMSIS/Include/cmsis_armcc.h
@@ -33,3 +31,4 @@ balancecar_hal_freertos\driver_led.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f
 balancecar_hal_freertos\driver_led.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_pwr.h
 balancecar_hal_freertos\driver_led.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim.h
 balancecar_hal_freertos\driver_led.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim_ex.h
+balancecar_hal_freertos\driver_led.o: ../Core/Inc/tim.h

@@ -31,6 +31,8 @@ balancecar_hal_freertos\main.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_ha
 balancecar_hal_freertos\main.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim.h
 balancecar_hal_freertos\main.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim_ex.h
 balancecar_hal_freertos\main.o: ../Core/Inc/adc.h
+balancecar_hal_freertos\main.o: ../Core/Inc/dma.h
 balancecar_hal_freertos\main.o: ../Core/Inc/i2c.h
 balancecar_hal_freertos\main.o: ../Core/Inc/tim.h
 balancecar_hal_freertos\main.o: ../Core/Inc/gpio.h
+balancecar_hal_freertos\main.o: ../Drivers/BSP/driver_led.h

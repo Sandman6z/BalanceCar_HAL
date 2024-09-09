@@ -1,114 +1,76 @@
-// SPDX-License-Identifier: GPL-3.0-only
-/*
- * Copyright (c) 2008-2023 100askTeam : Dongshan WEI <weidongshan@qq.com> 
- * Discourse:  https://forums.100ask.net
- */
-
- 
-/*  Copyright (C) 2008-2023 深圳百问网科技有限公司
- *  All rights reserved
- *
- *
- * 免责声明: 百问网编写的文档，仅供学员学习使用，可以转发或引用(请保留作者信息)，禁止用于商业用途！
- * 免责声明: 百问网编写的程序，可以用于商业用途，但百问网不承担任何后果！
- * 
- * 
- * 本程序遵循GPL V3协议，使用请遵循协议许可
- * 本程序所用的开发板：	DShanMCU-F103
- * 百问网嵌入式学习平台：https://www.100ask.net
- * 百问网技术交流社区：	https://forums.100ask.net
- * 百问网官方B站：				https://space.bilibili.com/275908810
- * 百问网官方淘宝：			https://100ask.taobao.com
- * 联系我们(E-mail)：	  weidongshan@qq.com
- *
- * 版权所有，盗版必究。
- *  
- * 修改历史     版本号           作者        修改内容
- *-----------------------------------------------------
- * 2023.08.04      v01         百问科技      创建文件
- *-----------------------------------------------------
- */
-
-
 #include "driver_led.h"
-#include "driver_timer.h"
-
-#include "gpio.h"
-
-/**********************************************************************
- * 函数名称： Led_Init
- * 功能描述： LED初始化函数, 在HAL的初始化代码里已经配置好了GPIO引脚, 
- *            所以本函数可以写为空
- *            但是为了不依赖于stm32cubemx, 此函数也实现了GPIO的配置
- * 输入参数： 无
- * 输出参数： 无
- * 返 回 值： 0 - 成功, 其他值 - 失败
- * 修改日期        版本号     修改人	      修改内容
- * -----------------------------------------------
- * 2023/08/03	     V1.0	  韦东山	      创建
- ***********************************************************************/
-int Led_Init(void)
+#include "main.h"
+#include "tim.h"
+ 
+uint16_t RGB_buffur[Reste_Data + WS2812_Data_Len] = { 0 }; //数据缓存数组
+ 
+void WS2812_Display_1(uint32_t Color, uint16_t num)
 {
-    GPIO_InitTypeDef GPIO_InitStruct = {0};
+   
+    //指针偏移:需要跳过复位信号的N个0
+    uint16_t* p = (RGB_buffur + Reste_Data) + (num * Led_Data_Len);
     
-    /* GPIO Ports Clock Enable */
-    __HAL_RCC_GPIOC_CLK_ENABLE();
-
-    /*Configure GPIO pin Output Level */
-    HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_RESET);
-
-    /*Configure GPIO pin : PC13 */
-    GPIO_InitStruct.Pin = GPIO_PIN_13;
-    GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-    GPIO_InitStruct.Pull = GPIO_NOPULL;
-    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-    HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+    for (uint8_t i = 0; i < 8; ++i)         
+	p[i+8]= (((Color << i) & 0X800000) ? Hight_Data :Low_Data);
+    for (uint8_t i = 8; i < 16; ++i)
+	p[i-8]= (((Color << i) & 0X800000) ? Hight_Data :Low_Data);
+    for (uint8_t i = 16; i < 24; ++i)
+	p[i]= (((Color << i) & 0X800000) ? Hight_Data :Low_Data);  
+       
+}
+ 
+ 
+void WS2812_Display_2( uint8_t red, uint8_t green, uint8_t blue,uint16_t num)
+{
+            
+            uint8_t i;
+            uint32_t Color=(green << 16 | red << 8 | blue);//将2个8位数据合并转化为32位数据类型
     
-    return 0;
+            //指针偏移:需要跳过复位信号的N个0
+            uint16_t* p = (RGB_buffur + Reste_Data) + (num * Led_Data_Len);
+    
+            for (i = 0; i < 24; ++i)    //对数组进行编辑
+			p[i]= (((Color << i) & 0X800000) ? Hight_Data : Low_Data);	
+                        
 }
-
-/**********************************************************************
- * 函数名称： Led_Control
- * 功能描述： LED控制函数
- * 输入参数： which-哪个LED, 在driver_led.h里定义, 比如LED_GREEN
- *            on-状态, 1-亮, 0-灭
- * 输出参数： 无
- * 返 回 值： 0 - 成功, 其他值 - 失败
- * 修改日期        版本号     修改人	      修改内容
- * -----------------------------------------------
- * 2023/08/03	     V1.0	  韦东山	      创建
- ***********************************************************************/
-int Led_Control(int which, int on)
+ 
+ 
+void WS2812_Number_4(uint32_t Color1,uint32_t Color2,uint32_t Color3,uint32_t Color4)
 {
-    if (on)
-        HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_RESET);
-    else
-        HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_SET);
-    return 0;
+    
+    uint16_t  RGB_Buff_4[Reste_Data + 4 * WS2812_Data_Len] = { 0 };
+    uint16_t* p;
+    uint32_t Color;
+    
+    for( uint8_t k=0;k<4;k++)
+  {      
+      switch (k)    //进行指针偏移
+      {
+        case 0: p= (RGB_Buff_4 + Reste_Data) + (0 * Led_Data_Len),Color=Color1;break;
+        case 1: p= (RGB_Buff_4 + Reste_Data) + (1 * Led_Data_Len),Color=Color2;break;
+        case 2: p= (RGB_Buff_4 + Reste_Data) + (2 * Led_Data_Len),Color=Color3;break;
+        case 3: p= (RGB_Buff_4 + Reste_Data) + (3 * Led_Data_Len),Color=Color4;break;
+        default : ;break;     
+      }
+      
+     for (uint8_t i = 0; i < 8; ++i)   //对数组进行编辑
+    {   
+        for (uint8_t i = 0; i < 8; ++i)
+        p[i+8]= (((Color << i) & 0X800000) ? Hight_Data :Low_Data);
+        for (uint8_t i = 8; i < 16; ++i)
+        p[i-8]= (((Color << i) & 0X800000) ? Hight_Data :Low_Data);
+        for (uint8_t i = 16; i < 24; ++i)
+        p[i]= (((Color << i) & 0X800000) ? Hight_Data :Low_Data);
+    } 
+   
+ }   
+  
+    HAL_TIM_PWM_Start_DMA(&htim1,TIM_CHANNEL_1,(uint32_t *)RGB_Buff_4,(176));//启动DMA传输
+    
 }
-
-/**********************************************************************
- * 函数名称： Led_Test
- * 功能描述： Led测试程序
- * 输入参数： 无
- * 输出参数： 无
- *            无
- * 返 回 值： 0 - 成功, 其他值 - 失败
- * 修改日期        版本号     修改人        修改内容
- * -----------------------------------------------
- * 2023/08/03        V1.0     韦东山       创建
- ***********************************************************************/
-void Led_Test(void)
+ 
+ //  DMA 传输完成回调函数
+void HAL_TIM_PWM_PulseFinishedCallback(TIM_HandleTypeDef *htim)
 {
-    Led_Init();
-
-    while (1)
-    {
-        Led_Control(LED_GREEN, 1);
-        mdelay(500);
-
-        Led_Control(LED_GREEN, 0);
-        mdelay(500);
-    }
+    HAL_TIM_PWM_Stop_DMA(&htim1,TIM_CHANNEL_1);
 }
-
